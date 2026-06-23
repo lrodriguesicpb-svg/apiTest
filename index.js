@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 
 import userRoute from './src/routes/user.route.js'
 import authRoute from './src/routes/auth.route.js'
+import clinicasRoute from './src/routes/clinicas.route.js'
 
 
 // Cria uma instâcia do aplicativo dotenv
@@ -32,6 +33,9 @@ app.use("/users", userRoute);
 
 // Define as rotas para validação de usuário
 app.use("/auth", authRoute);
+
+// Define as rotas para clinicas
+app.use("/clinicas", clinicasRoute);
 
 // Inicia o servidor e escuta na porta definida
 app.listen(port, () => console.log(`Servidor rodando na porta ${port}`))

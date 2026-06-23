@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true, select: false },
     role: { type: String, enum: ['user', 'moderator', 'admin'], default: 'user' },
     isActive: { type: Boolean, default: true },
+    isBlocked: { type: Boolean, default: false },
+    clinicas: { Type:Array, required: true },
     phone: { type: String },
     cpf: { type: String, unique: true },
     street: { type: String },
@@ -18,10 +20,12 @@ const userSchema = new mongoose.Schema({
     city: { type: String },
     state: { type: String },
     zipCode: { type: String },
-
-
+    createdAt: { type: Date, default: Date.now() },
+    updatedAt: { type: Date, default: Date.now() }
 })
 
+
+// Encripta a senha do usuário
 userSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, 10)
 })
