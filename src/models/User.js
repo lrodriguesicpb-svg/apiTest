@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
 
@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     role: { type: String, enum: ['user', 'moderator', 'admin'], default: 'user' },
     isActive: { type: Boolean, default: true },
     isBlocked: { type: Boolean, default: false },
-    clinicas: { Type:Array, required: true },
+    clinicas: { type:Array, required: true },
     phone: { type: String },
     cpf: { type: String, unique: true },
     street: { type: String },
@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
     city: { type: String },
     state: { type: String },
     zipCode: { type: String },
-    createdAt: { type: Date, default: Date.now() },
-    updatedAt: { type: Date, default: Date.now() }
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 })
 
 

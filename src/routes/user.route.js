@@ -15,6 +15,7 @@ route.get("/", userController.findALL)
 // Rota para obter um usuário por ID
 route.get("/:id", validId, validUser, userController.findById)
 
+// Rota para atualizar um usuário por ID
 route.patch("/:id", validId, validUser, userController.update)
 
 // Exporta o roteador para ser usado em outros arquivos

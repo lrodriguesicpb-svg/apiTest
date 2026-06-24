@@ -11,6 +11,8 @@ export const create = async (req, res) => {
         password,
         role,
         isActive,
+        isBlocked,
+        clinicas,
         phone,
         cpf,
         street,
@@ -21,7 +23,7 @@ export const create = async (req, res) => {
         zipCode } = req.body;
 
     // Verifica se todos os campos são fornecidos
-    if (!name || !email || !username || !password) { // Simplifiquei a validação inicial para campos essenciais
+    if (!name || !email || !username || !password || !clinicas) { // Simplifiquei a validação inicial para campos essenciais
         return res.status(400).json({ message: "Todos os campos são obrigatórios" })
     }
 
@@ -44,6 +46,8 @@ export const create = async (req, res) => {
                 username: user.username,
                 role: user.role,
                 isActive: user.isActive,
+                isBlocked: user.isBlocked,
+                clinicas: user.clinicas,
                 phone: user.phone,
                 cpf: user.cpf,
                 street: user.street,
