@@ -1,6 +1,7 @@
-import express from 'express'
 import userController from '../controllers/user.controller.js'
 import { validId, validUser } from '../middlewares/global.middleware.js'
+
+import express from 'express'
 
 
 // Cria uma instância do roteador do Express

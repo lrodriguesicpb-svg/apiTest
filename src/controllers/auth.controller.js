@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt'
 import { loginService, generateToken } from '../services/auth.service.js'
+import bcrypt from 'bcrypt'
 
 // loginController - controlador que recebe requisições de login
 const login = async (req, res) => {
@@ -8,8 +8,6 @@ const login = async (req, res) => {
     try {
         // Verifica se o usuário existe e se a senha está correta
         const user = await loginService(username)
-
-        // Verifica se o usuário existe e se a senha está correta
         if (!user) return res.status(404).json({ message: 'Usuário ou Senha Inválida!' })
 
         // Verifica se a senha está correta
@@ -18,6 +16,9 @@ const login = async (req, res) => {
 
         // Converte documento Mongoose para objeto JS puro se necessário, evitando quebras
         const userObj = user.toObject ? user.toObject() : user
+
+        // Verifica se o usuário está bloqueado
+        if (userObj.isBlocked === true) return res.status(404).json({ message: "Usuário bloqueado" })
 
         // Gera o token de acesso
         const token = generateToken(userObj._id)

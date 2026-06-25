@@ -14,7 +14,6 @@ const updateService = async (id, updateData) => {
     return User.findOneAndUpdate({ _id: id }, updateData, { returnDocument: 'after' }); // { new: true } retorna o documento atualizado
 }
 
-
 // Exporta os serviços para serem usados em outros arquivos
 export default {
     create,

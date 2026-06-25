@@ -1,6 +1,8 @@
-import mongoose from "mongoose";
 import userService from "../services/user.service.js";
 import clinicasService from "../services/clinicas.service.js";
+
+import mongoose from "mongoose";
+
 
 // Middleware para validar se o ID do usuário é válido
 export const validId = (req, res, next) => {
