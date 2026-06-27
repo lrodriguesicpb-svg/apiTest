@@ -4,7 +4,10 @@ import Clinicas from "../models/Clinicas.js"
 const create = async (body) => Clinicas.create(body)
 
 // Serviço para obter todas as clinicas
-const findALLService = async () => Clinicas.find()
+const findALLService = async (limit, offset) => Clinicas.find().limit(limit).skip(offset)
+
+// Serviço para contar todas as clinicas
+const countClinicas = async() => Clinicas.countDocuments()
 
 // Serviço para obter uma clinica por ID
 const findByIdService = async (id) => Clinicas.findById(id)
@@ -19,5 +22,6 @@ export default {
     create,
     findALLService,
     findByIdService,
-    updateService
+    updateService,
+    countClinicas
 }

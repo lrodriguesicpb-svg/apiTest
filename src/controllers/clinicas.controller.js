@@ -61,8 +61,36 @@ const createClinicas = async (req, res) => {
 
 // Controller para buscar todas as clinicas
 const findAllClinicas = async (req, res) => {
+
+    // Extrai os dados do corpo da requisição
+    let { limit, offset } = req.query
+
+    // Converte os valores para números
+    limit = Number(limit) || 2
+
+    // Converte os valores para números
+    offset = Number(offset) || 0
+
     try {
-        const clinicas = await clinicasService.findALLService()
+        const clinicas = await clinicasService.findALLService(limit, offset)
+
+        // Conta quantas clinicas existem no banco de dados
+        const total = await clinicasService.countClinicas()
+
+        // Busca a URL original da requisição
+        const currentUrl = req.originalUrl
+
+        // Atribui o limite e o offset para a URL da próxima requisição
+        const nextClinicas = offset + limit
+
+        // Atualiza a URL da próxima requisição com mais informações
+        const nextUrl = nextClinicas < total ? `${currentUrl}?limit=${limit}&offset=${nextClinicas}` : null
+
+        // Atribui o limite e o offset para a URL da próxima requisição
+        const prevClinicas = offset - limit < 0 ? null : offset - limit
+
+        // Atualiza a URL da próxima requisição com menos informações
+        const prevUrl = prevClinicas != null ? `${currentUrl}?limit=${limit}&offset=${prevClinicas}` : null
 
         // Verifica se a lista de clínicas está vazia
         if (!clinicas || clinicas.length === 0) {
@@ -70,7 +98,26 @@ const findAllClinicas = async (req, res) => {
         }
 
         // Retorna uma resposta de sucesso com a lista de clinicas
-        return res.status(200).json({ clinicas })
+        return res.status(200).json({
+            nextUrl,
+            prevUrl,
+            limit,
+            offset,
+            total,
+
+            results: clinicas.map(clinica => {
+                return {
+                    id: clinica._id,
+                    name: clinica.name,
+                    phone: clinica.phone,
+                    address: clinica.address,
+                    state: clinica.state,
+                    email: clinica.email,
+                    clinicType: clinica.clinicType,
+                    isAciveClinica: clinica.isAciveClinica,
+                }
+            })
+        })
 
     } catch (error) {
         console.error("Erro ao buscar clinicas:", error)
