@@ -22,7 +22,7 @@ const createClinicas = async (req, res) => {
         }
 
         try {
-            const clinica = await clinicasService.create(req.body)
+            const clinica = await clinicasService.createService(req.body)
 
             // Verifica se a clinica foi criada com sucesso
             if (!clinica) {
@@ -75,7 +75,7 @@ const findAllClinicas = async (req, res) => {
         const clinicas = await clinicasService.findALLService(limit, offset)
 
         // Conta quantas clinicas existem no banco de dados
-        const total = await clinicasService.countClinicas()
+        const total = await clinicasService.countClinicasService()
 
         // Busca a URL original da requisição
         const currentUrl = req.originalUrl
@@ -156,6 +156,7 @@ const findByIdClinicas = async (req, res) => {
     }
 }
 
+// Controller para atualizar uma clinica por ID
 const updateClinicas = async (req, res) => {
     // Extrai os dados do corpo da requisição
     const updateData = req.body;
@@ -170,7 +171,7 @@ const updateClinicas = async (req, res) => {
 
     try {
         // Não precisamos buscar o usuário aqui, o middleware validUser já garantiu que ele existe
-        await clinicasService.updateService(id, updateData)
+        await clinicasService.updateServiceService(id, updateData)
         res.json({ message: "Clinica atualizada com sucesso" })
     } catch (error) {
         console.error("Erro ao atualizar clinica:", error);
@@ -181,9 +182,47 @@ const updateClinicas = async (req, res) => {
     }
 }
 
+// Controller para buscar uma clinica por nome
+const searchByName = async (req, res) => {
+    try {
+
+        // Extrai os dados do corpo da requisição
+        const { name } = req.query
+
+        // Verifica se o nome da clinica existe
+        const clinicas = await clinicasService.searchByNameService(name)
+
+        // Verifica se a lista de clinicas está vazia
+        if (!clinicas || clinicas.length === 0) {
+            return res.status(404).json({ message: "Nenhuma clinica foi encontrada" })
+        }
+        // Retorna uma resposta de sucesso com a lista de clinicas
+        res.status(200).json({
+            results: clinicas.map(clinica => {
+                return {
+                    id: clinica._id,
+                    name: clinica.name,
+                    phone: clinica.phone,
+                    address: clinica.address,
+                    state: clinica.state,
+                    email: clinica.email,
+                    clinicType: clinica.clinicType,
+                    isAciveClinica: clinica.isAciveClinica,
+                }
+            })
+        })
+
+    } catch (error) {
+        console.error("Erro ao buscar clinicas por Nome:", error)
+        return res.status(500).json({ message: "Erro interno do servidor ao buscar clinicas por Nome." })
+
+    }
+}
+
 export {
     createClinicas,
     findAllClinicas,
     findByIdClinicas,
-    updateClinicas
+    updateClinicas,
+    searchByName
 }
