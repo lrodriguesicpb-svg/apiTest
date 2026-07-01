@@ -1,4 +1,4 @@
-import { createClinicas, findAllClinicas, findByIdClinicas, updateClinicas, searchByName } from '../controllers/clinicas.controller.js'
+import { createClinicas, findAllClinicas, findByIdClinicas, updateClinicas, searchByName, eraseClinicas, eraseClinicasByName } from '../controllers/clinicas.controller.js'
 import { validIdClinicas, validClinicas } from "../middlewares/global.middleware.js";
 import { update } from "../controllers/user.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -23,5 +23,11 @@ router.get("/:id", validIdClinicas, validClinicas, findByIdClinicas)
 
 // patch - rota para atualizar uma clinica por ID
 router.patch("/:id", validIdClinicas, validClinicas, updateClinicas)
+
+// delete - rota para excluir uma clinica por ID
+router.delete("/:id", authMiddleware, validIdClinicas, validClinicas, eraseClinicas)
+
+// delete - rota para excluir uma clinica por nome
+router.delete("/byname/:name/bystate/:state", authMiddleware, eraseClinicasByName)
 
 export default router;

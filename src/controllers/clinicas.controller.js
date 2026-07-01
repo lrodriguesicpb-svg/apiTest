@@ -219,10 +219,75 @@ const searchByName = async (req, res) => {
     }
 }
 
+// Controller para excluir uma clinica por ID
+const eraseClinicas = async (req, res) => {
+
+    try{
+
+        // O ID já está disponível em req.params
+        const id = req.params.id
+
+        // Verifica se a clinica existe e a exclui
+        const clinicas = await clinicasService.eraseClinicasService(id)
+
+        // Verifica se a clinica foi excluída com sucesso
+        if(!clinicas){
+            return res.status(404).json({ message: "Nenhuma clinica foi encontrada" })
+        }
+
+        res.status(200).json({ message: "Clinica excluída com sucesso" })
+
+    }catch(error){
+        console.error("Erro ao excluir clinicas:", error)
+        return res.status(500).json({ message: "Erro interno do servidor ao excluir clinicas." })
+    }
+}
+
+// Controller para excluir uma clinica por nome e estado
+const eraseClinicasByName = async (req, res) => {
+
+    try{
+
+        // O nome e estado estão disponíveis em req.params
+        const { name, state } = req.params
+
+        // Verifica se o nome foi fornecido
+        if (!name) {
+            return res.status(400).json({ message: "Nome da clínica é obrigatório" })
+        }else if (!state) {
+            return res.status(400).json({ message: "Estado da clínica é obrigatório" })
+        }
+
+        // Primeiro, verifica se a clínica existe com essa combinação de name + state
+        const clinicaExistente = await clinicasService.findByNameAndStateService(name, state)
+
+        // Verifica se a clinica existe
+        if(!clinicaExistente){
+            return res.status(404).json({ message: "Nenhuma clínica foi encontrada com esse nome e estado" })
+        }
+
+        // Se a clínica existe, exclui
+        const clinicaDeletada = await clinicasService.eraseClinicasByNameAndStateService(name, state)
+
+        // Verifica se a clinica foi excluída com sucesso
+        if(!clinicaDeletada){
+            return res.status(404).json({ message: "Erro ao excluir a clínica" })
+        }
+
+        res.status(200).json({ message: "Clínica excluída com sucesso" })
+
+    }catch(error){
+        console.error("Erro ao excluir clinica por nome:", error)
+        return res.status(500).json({ message: "Erro interno do servidor ao excluir clinica por nome." })
+    }
+}
+
 export {
     createClinicas,
     findAllClinicas,
     findByIdClinicas,
     updateClinicas,
-    searchByName
+    searchByName,
+    eraseClinicas,
+    eraseClinicasByName
 }
